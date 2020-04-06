@@ -21,9 +21,7 @@ SHOW_EVERY = 100
 epsilon = 0.75
 START_EPSILON_DECAYING = 1
 END_EPSILON_DECAYING = EPISODE // 2
-
 epsilon_decay_value = epsilon/(END_EPSILON_DECAYING - START_EPSILON_DECAYING)
-
 
 # episode statistic
 ep_rewards = []
@@ -56,13 +54,11 @@ class Qtable:
 def main():
 
     global epsilon
-
     q_table = Qtable(row_size=20, col_size=20)
 
     for episode in range(EPISODE):
 
         rewards_per_ep = 0
-
         cur_state = env.reset()
         done = False
 

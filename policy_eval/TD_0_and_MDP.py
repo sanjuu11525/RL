@@ -24,6 +24,9 @@ graph = np.array([State('Left' , 0.0, True , 0), State('A', 0.5, False, 0),
 
 
 def reset(graph):
+    '''
+    Reset to initial condition
+    '''
     for state in graph[1:-1]:
         state.value = 0.5
 
@@ -50,7 +53,6 @@ def compute_MDP():
 if __name__ == "__main__":
 
     for episode in EPISODE:
-    
         for _ in range(episode):
 
             done = False
@@ -61,7 +63,7 @@ if __name__ == "__main__":
             while not done:
                 value = graph[index].value
 
-                # 
+                # the probability of transition is 50%
                 action = 1 if np.random.rand() < 0.5 else -1
             
                 next = index + action
@@ -70,7 +72,8 @@ if __name__ == "__main__":
                 future_value, reward, done = graph[next].value, graph[next].reward, graph[next].done
 
                 # update next state by TD(0)
-                graph[index].value = value + ALPHA * (reward + GAMMA * future_value - value)
+                value = value + ALPHA * (reward + GAMMA * future_value - value)
+                graph[index].value = value
 
                 index = next
 
