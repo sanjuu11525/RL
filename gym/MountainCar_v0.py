@@ -52,6 +52,9 @@ class Qtable:
 
 
 def main():
+    '''
+    The task is to solve MountainCar_v0 by classic RL Q-learning.
+    '''
 
     global epsilon
     q_table = Qtable(row_size=20, col_size=20)
@@ -63,11 +66,13 @@ def main():
         done = False
 
         while not done:
+            # exploration versus exploitation
             if np.random.random() > epsilon:
                 action = np.argmax(q_table(cur_state))
             else:
                 action = np.random.randint(0, env.action_space.n)
             
+            # interact with env
             future_state, reward, done, _ = env.step(action)
 
             rewards_per_ep += reward
@@ -81,7 +86,7 @@ def main():
                 current_q = q_table(cur_state)[action]
                 new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
 
-                # update ocurrent state
+                # update current state
                 q_table(cur_state)[action] = new_q
 
             elif abs(future_state[0] - env.goal_position) < 0.01:

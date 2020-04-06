@@ -120,6 +120,10 @@ def optim_model(memory, policy_net, target_net, optimizer):
  
 
 def main():
+    '''
+    The task is to solve MountainCar_v0 by RL deep Q-learning.
+    '''
+
     # epsilon 
     epsilon = config['EPS_START']
 
@@ -142,11 +146,14 @@ def main():
         done = False
 
         while not done:
+            # exploration versus exploitation
             action = select_action(policy_net, state, epsilon)
             next_state, reward, done, info = env.step(action)
 
+            # store info for batch
             memory.push((state, next_state, reward, action, done and not info.get('TimeLimit.truncated', False)))
 
+            # train the policy net
             policy_net.train()
             optim_model(memory, policy_net, target_net, optimizer)
 
