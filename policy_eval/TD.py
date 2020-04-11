@@ -32,7 +32,9 @@ def reset():
 
 
 if __name__ == "__main__":
-
+    '''
+    TD(0) online policy evaluation.
+    '''
     for episode in EPISODE:
 
         # evaluate policy with the assigned episode
@@ -68,7 +70,7 @@ if __name__ == "__main__":
 
         reset()
 
-    plt.legend(loc=2, title=f'GAMMA:{GAMMA}')
+    plt.legend(loc=2, title=f'GAMMA:{GAMMA} ALPHA:{ALPHA}')
     plt.ylim(0, 1)
     plt.grid(True)
     plt.show()

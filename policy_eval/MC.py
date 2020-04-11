@@ -34,6 +34,9 @@ def reset():
 
 
 if __name__ == "__main__":
+    '''
+    Monte Carlo offline policy evalution.
+    '''
 
     for episode in EPISODE:
 
@@ -52,6 +55,7 @@ if __name__ == "__main__":
             queue_reward = deque([])
             # track trajectories by random walk
             while not done:
+                # track index
                 queue_idx.appendleft(index)
 
                 # the probability of transition is 50%
@@ -60,21 +64,24 @@ if __name__ == "__main__":
                 next = index + action
                 done, reward = graph[next].done, graph[next].reward
                 index = next
+                
+                # track reward
                 queue_reward.appendleft(reward)
 
             epi_queue_idx.append(queue_idx)
             epi_queue_reward.append(queue_reward)
 
-        # calculate values statistically
         if episode != 0:
+            # accumulate return for each step
             for queue_idx, queue_reward in zip(epi_queue_idx, epi_queue_reward):
-
+                
                 Gt = 0
                 for idx, reward in zip(queue_idx, queue_reward):
                     graph[idx].counter += 1
                     Gt = reward + GAMMA * Gt
                     graph[idx].value += Gt
 
+            # compute empirical mean
             for state in graph[1:-1]:
                 state.value = state.value/state.counter
                 
