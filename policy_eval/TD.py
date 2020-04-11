@@ -2,12 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-EPISODE = [0, 1, 10, 100]
-ALPHA = 0.1
-GAMMA = 1
+EPISODE = [0, 10, 100, 1000, 10000]
+ALPHA = 0.01
+GAMMA = 1.0
 STATIC = True
-MARKER = ['o', 'v', 'x', '*']
-COLOR = ['c', 'r', 'g', 'k']
+MARKER = ['x', 'x', 'x', 'x', '*']
+COLOR = ['b', 'r', 'g', 'k', 'c']
 
 class State():
     def __init__(self, name, value, done, reward):
@@ -23,32 +23,12 @@ graph = np.array([State('Left' , 0.0, True , 0), State('A', 0.5, False, 0),
                   State('Right', 0.0, True , 1)])
 
 
-def reset(graph):
+def reset():
     '''
     Reset to initial condition
     '''
     for state in graph[1:-1]:
         state.value = 0.5
-
-
-def compute_MDP():
-    '''
-    Implement policy evaluation of Markov process.
-    '''
-    P = np.array([[0  , 0  , 0  , 0  , 0  , 0  , 0  ],
-                  [0.5, 0  , 0.5, 0  , 0  , 0  , 0  ],
-                  [0  , 0.5, 0  , 0.5, 0  , 0  , 0  ],
-                  [0  , 0  , 0.5, 0  , 0.5, 0  , 0  ],
-                  [0  , 0  , 0  , 0.5, 0  , 0.5, 0  ],
-                  [0  , 0  , 0  , 0  , 0.5, 0  , 0.5],
-                  [0  , 0  , 0  , 0  , 0  , 0  , 0  ]])
-
-    R = np.array([0, 0, 0, 0, 0, 0, 1])
-    I = np.diag(np.ones((7)))
-    v = np.dot(np.linalg.inv(I - GAMMA * P), R)
-    
-    # ignore terminated states
-    return v[1:-1]
 
 
 if __name__ == "__main__":
@@ -86,14 +66,9 @@ if __name__ == "__main__":
         plt_y = [node.value for node in graph[1:-1]]
         plt.plot(plt_x, plt_y, color=COLOR.pop(), marker=MARKER.pop(), linewidth=0.75, markersize=3, label=f'episode:{episode}')
 
-        reset(graph)
+        reset()
 
-    # compute equivalent MDP problem
-    v = compute_MDP()
-
-    # plot exact solution
-    plt.plot(plt_x, v, color='BLUE', marker='o', linewidth=0.75, markersize=3, label='MDP')
-    plt.legend(loc=4)
+    plt.legend(loc=2, title=f'GAMMA:{GAMMA}')
     plt.ylim(0, 1)
     plt.grid(True)
     plt.show()
