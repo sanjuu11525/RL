@@ -2,12 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-EPISODE = [0, 10, 100, 1000, 10000]
+EPISODE = [0, 10, 100, 1000]
 ALPHA = 0.01
 GAMMA = 1.0
 STATIC = True
-MARKER = ['x', 'x', 'x', 'x', '*']
-COLOR = ['b', 'r', 'g', 'k', 'c']
+COLOR = ['r', 'g', 'm', 'k']
 
 class State():
     def __init__(self, name, value, done, reward):
@@ -21,6 +20,22 @@ graph = np.array([State('Left' , 0.0, True , 0), State('A', 0.5, False, 0),
                   State('B'    , 0.5, False, 0), State('C', 0.5, False, 0),
                   State('D'    , 0.5, False, 0), State('E', 0.5, False, 0),
                   State('Right', 0.0, True , 1)])
+
+
+def MDP():
+    '''
+    Solve Bellman expectation eq.
+    '''
+    P = np.array([[0  , 1.0, 0  , 0  , 0  ],
+                  [1.0, 0  , 1.0, 0  , 0  ],
+                  [0  , 1.0, 0  , 1.0, 0  ],
+                  [0  , 0  , 1.0, 0  , 1.0],
+                  [0  , 0  , 0  , 1.0, 0  ]])
+
+    R = np.array([0, 0, 0, 0, 1])
+    I = np.diag(np.ones((5)))
+    v = np.dot(np.linalg.inv(I - 0.5 * GAMMA * P), 0.5 * R)
+    return v
 
 
 def reset():
@@ -66,10 +81,12 @@ if __name__ == "__main__":
         # plot the result w.r.t episode
         plt_x = [node.state for node in graph[1:-1]]
         plt_y = [node.value for node in graph[1:-1]]
-        plt.plot(plt_x, plt_y, color=COLOR.pop(), marker=MARKER.pop(), linewidth=0.75, markersize=3, label=f'episode:{episode}')
+        plt.plot(plt_x, plt_y, color=COLOR.pop(), marker='x',linestyle='--', linewidth=0.75, markersize=3, label=f'episode:{episode}')
 
         reset()
 
+    v = MDP()
+    plt.plot(plt_x, v, color='b', marker='o',linestyle='-', linewidth=0.75, markersize=3, label=f'MDP')
     plt.legend(loc=2, title=f'GAMMA:{GAMMA} ALPHA:{ALPHA}')
     plt.ylim(0, 1)
     plt.grid(True)
