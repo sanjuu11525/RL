@@ -34,8 +34,8 @@ epsilon_decay_value = 0.9/(END_EPSILON_DECAYING - START_EPSILON_DECAYING)
 table = np.zeros((N_states, env.action_space.n))
 counter = np.zeros((N_states, env.action_space.n))
 
-ep_rewards = []
 def main():
+    ep_rewards = []
     epsilon = EPSILON
 
     for episode in range(EPISODE):
@@ -48,7 +48,7 @@ def main():
 
         # policy evaluation
         while not done:
-            # exploration versus exploitation
+            # epsilon greedy
             if np.random.random() > epsilon:
                 action = np.argmax(table[cur_state])
             else:
